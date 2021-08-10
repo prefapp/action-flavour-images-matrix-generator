@@ -1,0 +1,29 @@
+my-flavour:
+
+  triggers:
+
+    push:
+      branches:
+        - main
+        - dev
+
+my-second-flavour:
+
+  triggers:
+
+    release:
+
+my-third-flavour:
+
+  triggers:
+
+    release:
+
+my-fourth-flavour:
+
+  triggers:
+
+    prerelease: # this is a pseudo-event
+    
+
+
