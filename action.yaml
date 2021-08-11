@@ -1,38 +1,13 @@
-name: 'Dispatch a new image message on a gitops repo'
+name: 'flavour-images-matrix-generator'
 description: >
-  Using state repo structure it updates an image value and the creates 
-  a pull request in the same state repo
+  It generates a matrix (in a json format) to be used by the workflow's jobs in order to build Docker images with particular flavours. It is conceived to be used in complex workflows with the [matrix strategy](https://docs.github.com/es/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix) and the "fromJson" method. 
 inputs:
-  state_repo:
-    description: "Name of the state repo to dispatch to"
-    required: true
-  image_repository:
-    description: "Image repository to dispatch"
-    required: true
-  token:
-    description: >
-      Personal access token (PAT) used to fetch the repository. The PAT is configured
-      with the local git config, which enables your scripts to run authenticated git
-      commands. The post-job step removes the PAT.
-      We recommend using a service account with the least permissions necessary.
-      Also when generating a new PAT, select the least scopes necessary.
-      [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
-    required: true
-  deployment_file:
-    description: "Name of the deployment file (default deployment.yaml)"
-    default: "deployment.yaml"
-  github_token:
-    description: "The github token"
-    default: ${{ github.token }}
-  pull_request:
-    description: "The pull request to use (optional)"
-    default: ""
-  dispatch_event_name:
-    description: "The name of the event dispatch"
-    default: "dispatch-image"
-  default_branch:
-    default: ${{ github.event.repository.master_branch }}
-    description: "The branch used as a reference for the deployment file"
+  default_dockerfile:
+    description: Default Dockerfile.
+    default: "Dockerfile"
+  matrix_output:
+    description: The output variable of the generated matrix.
+    default: "matrix"
 runs:
   using: 'node12'
   main: 'dist/index.js'

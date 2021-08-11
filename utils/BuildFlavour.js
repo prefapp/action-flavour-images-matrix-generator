@@ -1,10 +1,19 @@
+let DEFAULT_DOCKERFILE = "Dockerfile"
+
 module.exports = class {
 
-  constructor({flavour, triggers, build_args}){
+  static SET_DEFAULT_DOCKERFILE(default_dockerfile){
+
+    DEFAULT_DOCKERFILE = default_dockerfile
+
+  }
+
+  constructor({flavour, triggers, build_args, dockerfile = DEFAULT_DOCKERFILE}){
 
     this.flavour = flavour
     this.triggers = triggers
-    this.build_args = build_args
+    this.build_args = build_args || {}
+    this.dockerfile =  dockerfile
 
   }
 

@@ -1,0 +1,55 @@
+default:
+  triggers:
+    prerelease:
+    release:
+    push:
+      branches:
+        - main
+  dockerfile:  Dockerfile
+  build_args:
+    VUE_APP_ENV: development
+
+hello-flavour:
+  triggers:
+    release:
+    prerelease:
+  dockerfile: Dockerfile.pro
+  build_args:
+    VUE_APP_ENV: production
+
+
+
+# trigger: release (3.7.1)
+# flavour: my-flavour
+# registry: situmacr.azure.com/foo
+#
+situmacr.azure.com/foo:3.7.1-my-flavour
+
+# trigger: pre-release (3.7.0-pre-1)
+# flavour: my-flavour
+# registry: situmacr.azure.com/foo
+#
+situmacr.azure.com/foo:3.7.0-pre-1-my-flavour
+
+# trigger: push main (db0d2b750b34b3c4abdf26e0243881fde34257a6)
+# flavour: my-flavour
+# registry: situmacr.azure.com/foo
+#
+situmacr.azure.com/foo:db0d2b75-my-flavour
+
+# trigger: push main (db0d2b750b34b3c4abdf26e0243881fde34257a6)
+# flavour: default
+# registry: situmacr.azure.com/foo
+#
+situmacr.azure.com/foo:db0d2b75-default
+
+
+
+
+
+
+
+
+
+
+

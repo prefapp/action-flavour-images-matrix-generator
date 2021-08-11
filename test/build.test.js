@@ -12,7 +12,15 @@ test('Build loads correctly a build.yaml', () => {
   
     flavour: "my-flavour",
 
-    triggers: {}
+    triggers: {},
+
+    build_args: {
+
+      APP: "foo",
+
+      App2: "lol"
+    }
+
     
   })
 
@@ -34,7 +42,7 @@ test('Build get flavours by trigger', () => {
   
   })
 
-  expect(flavours.length).toBe(1)
+  expect(flavours.length).toBe(2)
   
   expect(flavours[0].flavour).toBe("my-flavour")
 
@@ -44,7 +52,7 @@ test('Build get flavours by trigger', () => {
   
   })
 
-  expect(flavours.length).toBe(2)
+  expect(flavours.length).toBe(3)
 
 })
 
@@ -63,6 +71,6 @@ test('Build get flavours by pre-release trigger', () => {
 
   expect(flavours[0].flavour).toBe("my-fourth-flavour")
 
-  expect(flavours.length).toBe(1)
+  expect(flavours.length).toBe(2)
 
 })
