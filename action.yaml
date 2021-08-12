@@ -17,12 +17,13 @@ inputs:
   repository:
     description: Repository of the image
     required: true
-  matrix_output:
-    description: The output variable of the generated matrix.
-    default: "matrix"
   build_file:
     description: "Path of the build-file"
     default: ".github/build-images.yml"
 runs:
   using: 'node12'
   main: 'dist/index.js'
+
+outputs:
+  matrix:
+    description: a json string with the build args. 

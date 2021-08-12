@@ -29,8 +29,6 @@ async function run(){
 
     master_branch: core.getInput("default_branch"),
 
-    matrix_output: core.getInput("matrix_output"),
-
     repository: core.getInput("repository"),
 
     build_file: core.getInput("build_file"),
@@ -122,8 +120,7 @@ async function run(){
 
   core.info(matrix)
 
-  core.setOutput(ctx.matrix_output, matrix)
-  
+  core.setOutput("matrix", matrix)
 
 }
 
