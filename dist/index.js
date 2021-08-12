@@ -11514,28 +11514,6 @@ const BuildFlavour = __nccwpck_require__(472)
 
 module.exports = class {
 
-  static FROM_MAIN(ctx){
-
-    const octokit = github.getOctokit(ctx.token)
-    
-    return octokit.rest.repos.getContent({
-    
-      owner: ctx.owner,
-
-      repo: ctx.repo,
-
-      path: `${ctx.deployment_file}`
-    
-    }).then(({data}) => {
- 
-      return Buffer.from(data.content, "base64").toString('utf-8')
-
-      //core.info(`---------`)
-      //core.info(JSON.stringify(data, null, 4))
-    })
-
-  }
-
   constructor(data){
 
     this.data = data
@@ -11992,15 +11970,8 @@ async function run(){
   //
   const ctx = {
 
-    github_token: core.getInput("github_token"),
+    github_token: core.getInput("token"),
 
-    //
-    // This is the token we use to dispatch
-    // It is different from the github_token, because we need to trigger another action
-    // in another repo. 
-    //
-    token: core.getInput('token'),
-   
     owner: github.context.payload.repository.owner.login,
 
     repo: github.context.payload.repository.name,
