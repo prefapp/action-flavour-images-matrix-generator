@@ -4,6 +4,12 @@ const github = require('@actions/github');
 
 const fs = require("fs")
 
+const Build = require("./utils/Build.js")
+
+const ImagesCalculator = require("./utils/ImagesCalculator.js")
+
+const MatrixBuilder = require("./utils/MatrixBuilder.js")
+
 async function run(){
 
   //
@@ -20,131 +26,90 @@ async function run(){
     //
     token: core.getInput('token'),
    
-    state_repo: core.getInput('state_repo'),
-  
-    image_repository: core.getInput('image_repository'),
-
     owner: github.context.payload.repository.owner.login,
 
     repo: github.context.payload.repository.name,
 
-    deployment_file: core.getInput("deployment_file"),
-
     triggered_event: github.context.eventName,
-
-    dispatch_event_name: core.getInput("dispatch_event_name"),
 
     actor: github.context.actor,
 
     master_branch: core.getInput("default_branch"),
 
+    matrix_output: core.getInput("matrix_output"),
+
     current_branch: github.context.ref.replace("refs/heads/", ""),
-
-    images: (type, flavour) => {
-
-      return ImagesCalculator({action_type: type, flavour}, ctx)
-
-    }
   
   }
 
-  //core.info(JSON.stringify(github.context.payload.pull_request.head, null, 4))
+  const build = load_build(ctx)
 
   //
-  // we check if there were changes on the deployments file. 
-  // If that is the case, we dispatch ALL its content
+  // we check the flavours to build according to the  
+  // event that triggered the workflow
   //
+  let flavours = []
+  let tag = false
+
   if( ctx.triggered_event == "push" ){
- 
-    const deploymentFileHasChanges = await new GitControl({ctx}).deploymentHasChanges()
-  
-    if( deploymentFileHasChanges ) {
+      
+    flavours = build.withTrigger({
 
-      return processDeploymentFileWithChanges(ctx)
+      type: "push",
+
+      branch: ctx.current_branch
+
+    })
+
+    tag = await ImagesCalculator(`branch_${ctx.current_branch}`, ctx)
+  }
+  else if(ctx.triggered_event == "release"){
+
+    if( github.context.payload.release.prerelease ){
     
+      flavours = build.withTrigger({
+      
+        type: "prerelease"
+      
+      })
+
+      tag = await ImagesCalculator("prerelease", ctx)
+    }
+    else{
+
+      flavours = build.withTrigger({
+      
+        type: "release"
+      
+      })
+
+      tag = await ImagesCalculator("release", ctx)
     }
   }
+  else if( ctx.triggered_event == "pull_request"){
 
-  //
-  // We process the normal event
-  //
-  return processEvent(ctx)
+    const branch = github.context.payload.pull_request.head.ref
+
+    flavours = build.withTrigger({
+    
+      type: "pull_request",
+
+      branch
+    
+    })
+
+    tag = await ImagesCalculator(`branch_${branch}`, ctx)
+  }
+  else{
+
+    core.setFailed("Unknown triggered event")
+  }
+
+  const matrix = new MatrixBuilder({flavours, tag}).build()
+
+  core.setOutput(ctx.matrix_output, matrix)
+  
+
 }
 
-  async function processDeploymentFileWithChanges(ctx){
-
-    // load the deployments
-    const deployment = await loadDeployment(ctx)
-  
-    const changes = deployment.allActions()
-
-    new Dispatcher({actions: changes, ctx}).dispatch()
-    
-  }
-  
-  async function processEvent(ctx){
-   
-    // load the deployments
-    const deployment = await loadDeployment(ctx)
-
-    // get changes based on type of trigger
-    let changes = false
-
-    switch(ctx.triggered_event){
-
-      case "release":
-
-        if( github.context.payload.release.prerelease ){
-        
-          changes = deployment.parse("last_prerelease")
-        
-        }
-        else{
-
-          changes = deployment.parse("last_release")
-
-        }
-
-        break
-
-      default: 
-
-        //we take the branch
-        if( ctx.triggered_event == "push"){
-          
-          const branch = github.context.payload.ref.replace(/^refs\/heads\//, "")
-          
-          core.info(branch)
-
-          changes = deployment.parse(`branch_${branch}`)
-
-        }
-        else if( ctx.triggered_event == "pull_request"){
-
-          const branch = github.context.payload.pull_request.head.ref
-          
-          core.info(branch)
-
-          changes = deployment.parse(`branch_${branch}`)
-        }
-      
-        
-    }
-
-    new Dispatcher({actions: changes, ctx}).dispatch()
-
-  }
-
-    //
-    // Loads the deployments file (as it is defined on inputs.deployment_file)
-    //
-    async function loadDeployment(ctx){
-
-      const file = await Deployment.FROM_MAIN(ctx)
-
-      core.info( file )
-
-      return new Deployment( file ).init()
-    }
-  
 run()

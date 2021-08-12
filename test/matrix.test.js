@@ -10,7 +10,13 @@ test('A matrix is properly built', () => {
 
   const build = new Build(build_data).init()
 
-  console.log(new MatrixBuilder(build.flavours).build())
+  console.log(new MatrixBuilder({
+    
+    flavours: Object.values(build.flavours),
+
+    tag: "3.7.1"
+  
+  }).build())
 
 })
 
