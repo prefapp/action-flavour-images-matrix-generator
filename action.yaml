@@ -8,9 +8,9 @@ inputs:
   matrix_output:
     description: The output variable of the generated matrix.
     default: "matrix"
-  build-file:
+  build_file:
     description: "Path of the build-file"
-    default: ".github/build.yaml"
+    default: ".github/build-images.yml"
 runs:
   using: 'node12'
   main: 'dist/index.js'
