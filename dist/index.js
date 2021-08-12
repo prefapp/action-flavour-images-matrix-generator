@@ -12076,7 +12076,8 @@ async function run(){
 
   core.info(matrix)
 
-  core.setOutput(ctx.matrix_output, matrix)
+  //core.setOutput(ctx.matrix_output, matrix)
+  core.setOutput("matrix", matrix)
  
   core.info("---")
 
