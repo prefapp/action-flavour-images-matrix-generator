@@ -2,6 +2,15 @@ name: 'flavour-images-matrix-generator'
 description: >
   It generates a matrix (in a json format) to be used by the workflow's jobs in order to build Docker images with particular flavours. It is conceived to be used in complex workflows with the [matrix strategy](https://docs.github.com/es/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix) and the "fromJson" method. 
 inputs:
+  token:
+    description: >
+      Personal access token (PAT) used to fetch the repository. The PAT is configured
+      with the local git config, which enables your scripts to run authenticated git
+      commands. The post-job step removes the PAT.
+      We recommend using a service account with the least permissions necessary.
+      Also when generating a new PAT, select the least scopes necessary.
+      [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
+    default: ${{ github.token }}
   default_dockerfile:
     description: Default Dockerfile.
     default: "Dockerfile"

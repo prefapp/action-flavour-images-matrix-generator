@@ -17,15 +17,8 @@ async function run(){
   //
   const ctx = {
 
-    github_token: core.getInput("github_token"),
+    github_token: core.getInput("token"),
 
-    //
-    // This is the token we use to dispatch
-    // It is different from the github_token, because we need to trigger another action
-    // in another repo. 
-    //
-    token: core.getInput('token'),
-   
     owner: github.context.payload.repository.owner.login,
 
     repo: github.context.payload.repository.name,
