@@ -12013,6 +12013,8 @@ async function run(){
 
     matrix_output: core.getInput("matrix_output"),
 
+    build_file: core.getInput("build_file"),
+
     current_branch: github.context.ref.replace("refs/heads/", ""),
   
   }
@@ -12085,6 +12087,13 @@ async function run(){
   core.setOutput(ctx.matrix_output, matrix)
   
 
+}
+
+function load_build(ctx){
+
+  const build_file = ctx.build_file
+
+  return new Build(fs.readFileSync(build_file)).init()
 }
 
 run()
