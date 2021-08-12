@@ -12075,6 +12075,8 @@ async function run(){
   core.info(matrix)
 
   core.setOutput("matrix", matrix)
+  core.setOutput("diosito", "esto")
+  core.setOutput("conejin", "eso")
 
 }
 
