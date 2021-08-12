@@ -14,7 +14,9 @@ test('A matrix is properly built', () => {
     
     flavours: Object.values(build.flavours),
 
-    tag: "3.7.1"
+    tag: "3.7.1",
+
+    registry: "prefapp.io/test"
   
   }).build())
 

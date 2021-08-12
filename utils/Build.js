@@ -4,28 +4,6 @@ const BuildFlavour = require("./BuildFlavour.js")
 
 module.exports = class {
 
-  static FROM_MAIN(ctx){
-
-    const octokit = github.getOctokit(ctx.token)
-    
-    return octokit.rest.repos.getContent({
-    
-      owner: ctx.owner,
-
-      repo: ctx.repo,
-
-      path: `${ctx.deployment_file}`
-    
-    }).then(({data}) => {
- 
-      return Buffer.from(data.content, "base64").toString('utf-8')
-
-      //core.info(`---------`)
-      //core.info(JSON.stringify(data, null, 4))
-    })
-
-  }
-
   constructor(data){
 
     this.data = data

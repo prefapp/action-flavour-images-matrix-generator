@@ -1,10 +1,11 @@
 
 module.exports = class {
 
-  constructor({flavours, tag}){
+  constructor({flavours, tag, repository}){
 
     this.flavours = flavours
     this.tag = tag
+    this.repository = repository
 
   }
 
@@ -31,7 +32,7 @@ module.exports = class {
 
     __buildTag(flavour){
 
-      return `${this.tag}_${flavour}`
+      return `${this.repository}:${this.tag}_${flavour}`
     }
 
     __formatBuildArgs(build_args){

@@ -31,6 +31,8 @@ async function run(){
 
     matrix_output: core.getInput("matrix_output"),
 
+    repository: core.getInput("repository"),
+
     build_file: core.getInput("build_file"),
 
     current_branch: github.context.ref.replace("refs/heads/", ""),
@@ -100,7 +102,17 @@ async function run(){
     core.setFailed("Unknown triggered event")
   }
 
-  const matrix = new MatrixBuilder({flavours, tag}).build()
+  const matrix = new MatrixBuilder({
+    
+    flavours, 
+    
+    tag, 
+    
+    repository: ctx.repository
+  
+  }).build()
+
+  core.info(matrix)
 
   core.setOutput(ctx.matrix_output, matrix)
   

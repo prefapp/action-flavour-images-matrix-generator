@@ -14,6 +14,9 @@ inputs:
   default_dockerfile:
     description: Default Dockerfile.
     default: "Dockerfile"
+  repository:
+    description: Repository of the image
+    required: true
   matrix_output:
     description: The output variable of the generated matrix.
     default: "matrix"
