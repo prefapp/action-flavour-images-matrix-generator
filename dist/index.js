@@ -11753,7 +11753,7 @@ module.exports = class {
     
     })
 
-    return JSON.stringify(build, null, 4)
+    return JSON.stringify(build)
 
 
   }
