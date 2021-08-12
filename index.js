@@ -49,7 +49,9 @@ async function run(){
   let tag = false
 
   if( ctx.triggered_event == "push" ){
-      
+ 
+    core.info(`With event push on branch ${ctx.current_branch}`)
+
     flavours = build.withTrigger({
 
       type: "push",
@@ -63,6 +65,8 @@ async function run(){
   else if(ctx.triggered_event == "release"){
 
     if( github.context.payload.release.prerelease ){
+
+      core.info(`With event prerelease`)
     
       flavours = build.withTrigger({
       
@@ -73,6 +77,8 @@ async function run(){
       tag = await ImagesCalculator("prerelease", ctx)
     }
     else{
+
+      core.info(`With event release`)
 
       flavours = build.withTrigger({
       
@@ -86,6 +92,8 @@ async function run(){
   else if( ctx.triggered_event == "pull_request"){
 
     const branch = github.context.payload.pull_request.head.ref
+
+    core.info(`With event pull_request on branch ${branch}`)
 
     flavours = build.withTrigger({
     
