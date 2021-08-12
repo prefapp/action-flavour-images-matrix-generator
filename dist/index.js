@@ -12055,6 +12055,8 @@ async function run(){
 
   const matrix = new MatrixBuilder({flavours, tag}).build()
 
+  core.info(matrix)
+
   core.setOutput(ctx.matrix_output, matrix)
   
 
