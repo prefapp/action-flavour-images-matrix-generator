@@ -1,19 +1,20 @@
 
 module.exports = class {
 
-  constructor(flavours){
+  constructor({flavours, tag}){
 
     this.flavours = flavours
+    this.tag = tag
 
   }
 
   build(){
 
-    const build = Object.values(this.flavours).map((fl) => {
+    const build = this.flavours.map((fl) => {
     
       return {
       
-        tags: fl.flavour,
+        tags: this.__buildTag(fl.flavour),
 
         build_args: this.__formatBuildArgs(fl.build_args),
 
@@ -25,7 +26,13 @@ module.exports = class {
 
     return JSON.stringify(build, null, 4)
 
+
   }
+
+    __buildTag(flavour){
+
+      return `${this.tag}_${flavour}`
+    }
 
     __formatBuildArgs(build_args){
 
