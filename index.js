@@ -17,15 +17,8 @@ async function run(){
   //
   const ctx = {
 
-    github_token: core.getInput("github_token"),
+    github_token: core.getInput("token"),
 
-    //
-    // This is the token we use to dispatch
-    // It is different from the github_token, because we need to trigger another action
-    // in another repo. 
-    //
-    token: core.getInput('token'),
-   
     owner: github.context.payload.repository.owner.login,
 
     repo: github.context.payload.repository.name,
@@ -36,7 +29,9 @@ async function run(){
 
     master_branch: core.getInput("default_branch"),
 
-    matrix_output: core.getInput("matrix_output"),
+    repository: core.getInput("repository"),
+
+    build_file: core.getInput("build_file"),
 
     current_branch: github.context.ref.replace("refs/heads/", ""),
   
@@ -52,7 +47,9 @@ async function run(){
   let tag = false
 
   if( ctx.triggered_event == "push" ){
-      
+ 
+    core.info(`With event push on branch ${ctx.current_branch}`)
+
     flavours = build.withTrigger({
 
       type: "push",
@@ -66,6 +63,8 @@ async function run(){
   else if(ctx.triggered_event == "release"){
 
     if( github.context.payload.release.prerelease ){
+
+      core.info(`With event prerelease`)
     
       flavours = build.withTrigger({
       
@@ -76,6 +75,8 @@ async function run(){
       tag = await ImagesCalculator("prerelease", ctx)
     }
     else{
+
+      core.info(`With event release`)
 
       flavours = build.withTrigger({
       
@@ -89,6 +90,8 @@ async function run(){
   else if( ctx.triggered_event == "pull_request"){
 
     const branch = github.context.payload.pull_request.head.ref
+
+    core.info(`With event pull_request on branch ${branch}`)
 
     flavours = build.withTrigger({
     
@@ -105,11 +108,27 @@ async function run(){
     core.setFailed("Unknown triggered event")
   }
 
-  const matrix = new MatrixBuilder({flavours, tag}).build()
-
-  core.setOutput(ctx.matrix_output, matrix)
+  const matrix = new MatrixBuilder({
+    
+    flavours, 
+    
+    tag, 
+    
+    repository: ctx.repository
   
+  }).build()
 
+  core.info(matrix)
+
+  core.setOutput("matrix", matrix)
+
+}
+
+function load_build(ctx){
+
+  const build_file = ctx.build_file
+
+  return new Build(fs.readFileSync(build_file)).init()
 }
 
 run()
