@@ -11604,7 +11604,7 @@ module.exports = class {
 
     if( type in this.triggers ){
 
-      if( type == "push" || type == "pull_request" ){
+      if( type == "push" ){
 
         if( this.triggers[type].branches.indexOf( branch ) !== -1 ){
 
@@ -11753,11 +11753,7 @@ module.exports = class {
     
     })
 
-    return JSON.stringify({
-    
-      include: build
-    
-    })
+    return JSON.stringify(build)
 
 
   }
@@ -12079,8 +12075,6 @@ async function run(){
   core.info(matrix)
 
   core.setOutput("matrix", matrix)
-  core.setOutput("diosito", "esto")
-  core.setOutput("conejin", "eso")
 
 }
 

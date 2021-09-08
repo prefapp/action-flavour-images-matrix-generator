@@ -1,6 +1,7 @@
 const jsYaml = require("js-yaml")
 
 const BuildFlavour = require("./BuildFlavour.js")
+const validateYamlSchema = require("./BuildValidate.js")
 
 module.exports = class {
 
@@ -27,6 +28,9 @@ module.exports = class {
   init(){
 
     this.data = this.__loadYaml(this.data)
+
+    if (!validateYamlSchema(this.data).valid)
+      throw `Error validating structure using json schema!`  
 
     this.__loadData()
 

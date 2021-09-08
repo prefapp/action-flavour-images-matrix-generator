@@ -1,3 +1,5 @@
+var Validator = require('jsonschema').Validator;
+
 const FlavourSchema = {
 
   id: "/FlavourSchema",
@@ -5,14 +7,21 @@ const FlavourSchema = {
   type: "object",
 
   properties: {
-
-    triggers: 
+    triggers: {}
   }
 
 }
 
 
-module.exports = function(){
+module.exports = function(unvalidatedJson){
 
+  var validator = new Validator();
+  var schema = {
+    
+        "type": "object"
+  
+      };
+
+  return validator.validate(unvalidatedJson, schema);
 
 }
