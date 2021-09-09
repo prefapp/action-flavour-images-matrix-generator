@@ -34,20 +34,20 @@ test('Fail validation with json schema Dockerfile', () => {
 
   expect(() => {
     
-    const build = new Build(build_data).init()
+    new Build(build_data).init()
 
   }).toThrow("Error validating structure using json schema! ERR: instance.default.dockerfile is not of a type(s) string");
 
 })
 
 
-test('Fail validation with json schema Dockerfile', () => {
+test('Fail validation with json schema branches not array', () => {
 
   const build_data = fs.readFileSync("./fixtures/build4.test.yaml")
 
   expect(() => {
     
-    const build = new Build(build_data).init()
+    new Build(build_data).init()
 
   }).toThrow("Error validating structure using json schema! ERR: instance.my-fourth-flavour.triggers.pull_request.branches is not of a type(s) array");
 

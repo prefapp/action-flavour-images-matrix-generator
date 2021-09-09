@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "init": "eslint --init",
     "lint": "eslint .",
     "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
     "test": "jest",
