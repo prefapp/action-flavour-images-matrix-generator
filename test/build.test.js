@@ -27,6 +27,27 @@ test('Build loads correctly a build.yaml', () => {
 
 })
 
+test("Build get flavours on pull_request trigger", () => {
+
+  const build_data = fs.readFileSync("./fixtures/build.test.yaml")
+
+  const build = new Build(build_data).init()
+
+  let flavours = build.withTrigger({
+  
+    type: "pull_request",
+
+    branch: "work"
+  
+  })
+
+  expect(flavours.length).toBe(1)
+  
+  expect(flavours[0].flavour).toBe("my-flavour")
+
+  console.log(flavours[0])
+})
+
 
 test('Build get flavours by trigger', () => {
 
