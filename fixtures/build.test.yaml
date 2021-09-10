@@ -4,6 +4,9 @@ my-flavour:
       branches:
         - dev
         - main
+    pull_request:
+      branches:
+        - work
   build_args: 
     APP: foo
     App2: lol
