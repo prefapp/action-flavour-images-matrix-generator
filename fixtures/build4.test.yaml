@@ -19,20 +19,6 @@ my-third-flavour:
 
 my-fourth-flavour:
   triggers:
-    prerelease: # this is a pseudo-event
-
-default:
-  triggers:
-    prerelease:
-    release:
-    push:
-      branches:
-        - main
-  dockerfile:  Dockerfile
-  build_args:
-    VUE_APP_ENV: development
-
-
-    
-
+    pull_request:
+      branches: "dev"
 

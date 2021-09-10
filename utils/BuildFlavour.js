@@ -21,7 +21,7 @@ module.exports = class {
 
     if( type in this.triggers ){
 
-      if( type == "push" || type == "pull_request" ){
+      if( type == "push" ){
 
         if( this.triggers[type].branches.indexOf( branch ) !== -1 ){
 
