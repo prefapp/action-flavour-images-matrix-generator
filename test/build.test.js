@@ -27,26 +27,32 @@ test('Build loads correctly a build.yaml', () => {
 
 })
 
-test("Build get flavours on pull_request trigger", () => {
 
-  const build_data = fs.readFileSync("./fixtures/build.test.yaml")
+test('Fail validation with json schema Dockerfile', () => {
 
-  const build = new Build(build_data).init()
+  const build_data = fs.readFileSync("./fixtures/build3.test.yaml")
 
-  let flavours = build.withTrigger({
-  
-    type: "pull_request",
+  expect(() => {
+    
+    new Build(build_data).init()
 
-    branch: "work"
-  
-  })
+  }).toThrow("Error validating structure using json schema! ERR: instance.default.dockerfile is not of a type(s) string");
 
-  expect(flavours.length).toBe(1)
-  
-  expect(flavours[0].flavour).toBe("my-flavour")
-
-  console.log(flavours[0])
 })
+
+
+test('Fail validation with json schema branches not array', () => {
+
+  const build_data = fs.readFileSync("./fixtures/build4.test.yaml")
+
+  expect(() => {
+    
+    new Build(build_data).init()
+
+  }).toThrow("Error validating structure using json schema! ERR: instance.my-fourth-flavour.triggers.pull_request.branches is not of a type(s) array");
+
+})
+
 
 
 test('Build get flavours by trigger', () => {
