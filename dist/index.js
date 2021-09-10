@@ -11538,6 +11538,10 @@ module.exports = class {
 
     this.data = this.__loadYaml(this.data)
 
+    /*const validation = validateYamlSchema(this.data);
+    if (!validation.valid)
+      throw `Error validating structure using json schema! ERR: ${validation.errors}`   
+    */
     this.__loadData()
 
     return this
@@ -11604,7 +11608,7 @@ module.exports = class {
 
     if( type in this.triggers ){
 
-      if( type == "push" || type == "pull_request" ){
+      if( type == "push" ){
 
         if( this.triggers[type].branches.indexOf( branch ) !== -1 ){
 
@@ -11753,11 +11757,7 @@ module.exports = class {
     
     })
 
-    return JSON.stringify({
-    
-      include: build
-    
-    })
+    return JSON.stringify(build)
 
 
   }
@@ -12079,8 +12079,6 @@ async function run(){
   core.info(matrix)
 
   core.setOutput("matrix", matrix)
-  core.setOutput("diosito", "esto")
-  core.setOutput("conejin", "eso")
 
 }
 
