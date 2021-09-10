@@ -25,11 +25,7 @@ module.exports = class {
     
     })
 
-    return JSON.stringify({
-    
-      include: build
-    
-    })
+    return JSON.stringify(build)
 
 
   }
