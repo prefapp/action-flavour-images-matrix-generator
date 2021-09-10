@@ -29,10 +29,10 @@ module.exports = class {
 
     this.data = this.__loadYaml(this.data)
 
-    const validation = validateYamlSchema(this.data);
+    /*const validation = validateYamlSchema(this.data);
     if (!validation.valid)
       throw `Error validating structure using json schema! ERR: ${validation.errors}`   
-
+    */
     this.__loadData()
 
     return this

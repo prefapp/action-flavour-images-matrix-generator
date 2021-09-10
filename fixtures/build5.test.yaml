@@ -1,0 +1,22 @@
+cbx-ovac-dev:
+  triggers:  
+    pull_request:
+      branches: ["dev"]
+  build_args:
+    REACT_APP_API_URL: api.ovac.dev.councilbox.com
+    REACT_APP_CERT_API: secure-api.ovac.dev.councilbox.com
+  dockerfile: docker/Dockerfile
+cbx-ovac-pre:
+  triggers:  
+    prerelease:
+  build_args:
+    REACT_APP_API_URL: api.ovac.pre.councilbox.com
+    REACT_APP_CERT_API: secure-api.ovac.pre.councilbox.com
+  dockerfile: docker/Dockerfile
+cbx-ovac-pro:
+  triggers:  
+    release:
+  build_args:
+    REACT_APP_API_URL: api.ovac.prok8s.councilbox.com
+    REACT_APP_CERT_API: secure-api.ovac.prok8s.councilbox.com
+  dockerfile: docker/Dockerfile
