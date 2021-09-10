@@ -1,7 +1,6 @@
 const jsYaml = require("js-yaml")
 
 const BuildFlavour = require("./BuildFlavour.js")
-const validateYamlSchema = require("./BuildValidate.js")
 
 module.exports = class {
 
