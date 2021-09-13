@@ -28,7 +28,8 @@ default:
     push:
       branches:
         - main
-  dockerfile:  Dockerfile
+  dockerfile:  
+    file: Dockerfile.dev
   build_args:
     VUE_APP_ENV: development
 
