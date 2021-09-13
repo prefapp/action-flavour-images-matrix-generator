@@ -12120,7 +12120,7 @@ module.exports = class {
 
     if( type in this.triggers ){
 
-      if( type == "push" ){
+      if( type == "push" || type == "pull_request" ){
 
         if( this.triggers[type].branches.indexOf( branch ) !== -1 ){
 
