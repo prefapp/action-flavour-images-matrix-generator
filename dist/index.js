@@ -12120,7 +12120,7 @@ module.exports = class {
 
     if( type in this.triggers ){
 
-      if( type == "push" || type == "pull_request" ){
+      if( type == "push" ){
 
         if( this.triggers[type].branches.indexOf( branch ) !== -1 ){
 
@@ -12352,7 +12352,11 @@ module.exports = class {
     
     })
 
-    return JSON.stringify(build)
+    return JSON.stringify({
+
+      include: build
+
+    })
 
 
   }
