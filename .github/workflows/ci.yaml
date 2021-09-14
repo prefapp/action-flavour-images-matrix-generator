@@ -23,6 +23,8 @@ jobs:
       - name: Unit tests
         run: npm run test
 
-      - name: Compare dist
+      - name: Check if latest code is compiled
         run: |
+          mv dist/ dist_old
           npm run prepare
+          diff dist dist_old
