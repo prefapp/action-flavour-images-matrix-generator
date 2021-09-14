@@ -27,4 +27,4 @@ jobs:
         run: |
           mv dist/ dist_old
           npm run prepare
-          diff utils dist_old
+          diff dist dist_old
