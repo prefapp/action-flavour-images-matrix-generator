@@ -27,5 +27,5 @@ jobs:
         run: |
           mv dist/ dist_old
           npm run prepare
-          diff utils dist_old > kk || (echo "THE SOURCE CODE AND THE COMPILED FILES DO NOT MATCH" && exit 1)
+          diff utils dist_old > kk || (echo "ERROR: THE SOURCE CODE AND THE COMPILED FILES /dist DO NOT MATCH" && exit 1)
 
