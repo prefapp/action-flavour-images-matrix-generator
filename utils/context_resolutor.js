@@ -45,8 +45,6 @@ module.exports = function(key){
 
     switch(level){
 
-      case "secrets":
-        return github.context.secrets
       case "env"
         return process.env
       default:
