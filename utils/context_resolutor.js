@@ -48,7 +48,7 @@ module.exports = function(key){
       case "secrets":
         return github.context.secrets
       case "env"
-        return github.context.env
+        return process.env
       default:
         throw `UNKNOW_RESOLUTOR ${level}`
 
