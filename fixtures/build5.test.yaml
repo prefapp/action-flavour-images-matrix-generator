@@ -7,7 +7,7 @@ my-flavour:
   build_args: 
     APP: foo
     App2: lol
-    PAT: ${{secret.PAT}}
+    PAT: ${{env.PAT}}
   dockerfile: Dockerfile.outro
 
 my-second-flavour:
