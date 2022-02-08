@@ -1,6 +1,6 @@
 let DEFAULT_DOCKERFILE = "Dockerfile"
 
-const IS_INTERPOLABLE = new RegExp(/^\$\{\{[^\}]+\}\}$/)
+const IS_INTERPOLABLE = new RegExp(/^\$\{\{([^\}]+)\}\}$/)
 
 module.exports = class {
 
@@ -60,7 +60,9 @@ module.exports = class {
 
         // We pass the interpolable value to the context resolutor
         // which is going to use action context to try to resolve its value
-        build_args_interpolated[key] = contextResolutor(build_args[key])
+        const clean_key = IS_INTERPOLABLE.exec(build_args[key])[1]
+
+        build_args_interpolated[key] = contextResolutor(clean_key)
 
       }
       else{

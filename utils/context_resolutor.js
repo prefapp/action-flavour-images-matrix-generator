@@ -45,7 +45,7 @@ module.exports = function(key){
 
     switch(level){
 
-      case "env"
+      case "env":
         return process.env
       default:
         throw `UNKNOW_RESOLUTOR ${level}`

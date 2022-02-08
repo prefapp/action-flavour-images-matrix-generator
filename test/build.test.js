@@ -109,7 +109,7 @@ test('Build performs values interpolation', () => {
   const build = new Build(build_data, function(value){
 
     // mock of context resolutor
-    if(value === "${{secret.PAT}}"){
+    if(value === "env.PAT"){
       return "my-important-secret"
     }
     else{
