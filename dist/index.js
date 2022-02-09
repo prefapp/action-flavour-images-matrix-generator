@@ -12026,9 +12026,13 @@ const validateYamlSchema = __nccwpck_require__(3978)
 
 module.exports = class {
 
-  constructor(data){
+  constructor(data, contextResolutor = function(){ throw "CONTEXT_RESOLUTOR_UNDEFINED"}){
 
     this.data = data
+
+    // It's a function that solves an env|secret reference
+    // or dies if not defined
+    this.contextResolutor = contextResolutor 
 
     this.__flavours = {}
 
@@ -12063,7 +12067,13 @@ module.exports = class {
 
     for(const flavour in this.data ){
 
-      this.__flavours[flavour] = new BuildFlavour({flavour, ...this.data[flavour]})
+      this.__flavours[flavour] = new BuildFlavour({
+
+        flavour, 
+
+        ...this.data[flavour]
+
+      }, this.contextResolutor)
       
     }
 
@@ -12099,6 +12109,8 @@ module.exports = class {
 
 let DEFAULT_DOCKERFILE = "Dockerfile"
 
+const IS_INTERPOLABLE = new RegExp(/^\$\{\{([^}]+)\}\}$/)
+
 module.exports = class {
 
   static SET_DEFAULT_DOCKERFILE(default_dockerfile){
@@ -12107,12 +12119,14 @@ module.exports = class {
 
   }
 
-  constructor({flavour, triggers, build_args, dockerfile = DEFAULT_DOCKERFILE}){
+  constructor({flavour, triggers, build_args, dockerfile = DEFAULT_DOCKERFILE}, contextResolutor){
 
     this.flavour = flavour
     this.triggers = triggers
-    this.build_args = build_args || {}
     this.dockerfile =  dockerfile
+
+
+    this.build_args = this.__interpolateBuildArgs(build_args || {}, contextResolutor)
 
   }
 
@@ -12142,6 +12156,32 @@ module.exports = class {
 
       return false
     }
+
+  }
+
+  __interpolateBuildArgs(build_args, contextResolutor){
+
+    const build_args_interpolated = {}
+
+    for(const key in build_args){
+
+      if(IS_INTERPOLABLE.test(build_args[key])){
+
+        // We pass the interpolable value to the context resolutor
+        // which is going to use action context to try to resolve its value
+        const clean_key = IS_INTERPOLABLE.exec(build_args[key])[1]
+
+        build_args_interpolated[key] = contextResolutor(clean_key)
+
+      }
+      else{
+
+        build_args_interpolated[key] = build_args[key]
+      }
+
+    }
+
+    return build_args_interpolated
 
   }
 

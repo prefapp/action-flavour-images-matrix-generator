@@ -10,27 +10,25 @@
  *   - value(string): the correspondant value
  */
 
-const github = require('@actions/github');
-
 module.exports = function(key){
 
   let resolved = false
 
   for(const level of key.split(/\./)){
 
-    if(!resolutor){
+    if(resolved === false){
 
       resolved = __getResolutor(level)
     
     }
     else{
     
-      if(!resolved[l]){
+      if(!resolved[level]){
 
         throw `COULD NOT RESOLVE ${key}`
       }
 
-      resolved = resolved[l]
+      resolved = resolved[level]
 
     }
 
