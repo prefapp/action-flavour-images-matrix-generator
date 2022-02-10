@@ -101,3 +101,47 @@ test('Build get flavours by pre-release trigger', () => {
   expect(flavours.length).toBe(2)
 
 })
+
+test('Build performs values interpolation', () => {
+
+  const build_data = fs.readFileSync("./fixtures/build5.test.yaml")
+
+  const build = new Build(build_data, function(value){
+
+    // mock of context resolutor
+    if(value === "env.PAT"){
+      return "my-important-secret"
+    }
+    else if (value === "env.PAT2"){
+      return "my-pat-2"
+    }
+    else{
+
+      throw `UNKONW VAR ${value}`
+    }
+
+  }).init()
+
+  let flavours = build.withTrigger({
+  
+    type: "push",
+
+    branch: "main"
+  
+  })
+
+  expect(flavours[0].flavour).toBe("my-flavour")
+
+  expect(flavours[0].build_args).toEqual({
+
+    APP: "foo",
+    App2: "lol",
+    PAT: "my-important-secret",
+    PAT2: "my-pat-2",
+    PAT3: "my-pat-2",
+    PAT4: "my-pat-2",
+    PAT5: "my-pat-2",
+
+  })
+})
+

@@ -5,9 +5,13 @@ const validateYamlSchema = require("./BuildValidate.js")
 
 module.exports = class {
 
-  constructor(data){
+  constructor(data, contextResolutor = function(){ throw "CONTEXT_RESOLUTOR_UNDEFINED"}){
 
     this.data = data
+
+    // It's a function that solves an env|secret reference
+    // or dies if not defined
+    this.contextResolutor = contextResolutor 
 
     this.__flavours = {}
 
@@ -42,7 +46,13 @@ module.exports = class {
 
     for(const flavour in this.data ){
 
-      this.__flavours[flavour] = new BuildFlavour({flavour, ...this.data[flavour]})
+      this.__flavours[flavour] = new BuildFlavour({
+
+        flavour, 
+
+        ...this.data[flavour]
+
+      }, this.contextResolutor)
       
     }
 

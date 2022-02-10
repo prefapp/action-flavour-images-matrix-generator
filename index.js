@@ -10,6 +10,8 @@ const ImagesCalculator = require("./utils/ImagesCalculator.js")
 
 const MatrixBuilder = require("./utils/MatrixBuilder.js")
 
+const ContextResolutor = require("./utils/ContextResolutor.js")
+
 async function run(){
 
   //
@@ -128,7 +130,7 @@ function load_build(ctx){
 
   const build_file = ctx.build_file
 
-  return new Build(fs.readFileSync(build_file)).init()
+  return new Build(fs.readFileSync(build_file), ContextResolutor).init()
 }
 
 run()

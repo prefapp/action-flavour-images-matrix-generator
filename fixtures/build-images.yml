@@ -1,0 +1,37 @@
+foz-flavour:
+  triggers:  
+    push:  
+      branches: ["main"] 
+    prerelease:
+    release:
+  build_args:
+    TENANT: "foz"
+    SHA: "${{env.GITHUB_SHA}}"
+
+default:
+  triggers:  
+    push:  
+      branches: ["main"] 
+    prerelease:
+    release: 
+  build_args:
+    TENANT: "vigo"  
+    SHA: "${{env.GITHUB_SHA}}"
+
+mondo-flavour:
+  triggers:
+    push:  
+      branches: ["main"] 
+    prerelease:
+    release:
+  build_args:
+    TENANT: "mondo"  
+    SHA: "${{env.GITHUB_SHA}}"
+
+test-interpolation-flavour:
+  triggers:
+    push:  
+      branches: ["test-interpolation"] 
+  build_args:
+    TENANT: "test"
+    SHA: "${{env.GITHUB_SHA}}"

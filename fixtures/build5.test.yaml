@@ -1,0 +1,30 @@
+my-flavour:
+  triggers:
+    push:
+      branches:
+        - dev
+        - main
+  build_args: 
+    APP: foo
+    App2: lol
+    PAT: ${{env.PAT}}
+    PAT2: ${{ env.PAT2 }}
+    PAT3: ${{env.PAT2 }}
+    PAT4: ${{ env.PAT2}}
+    PAT5: '${{ env.PAT2}}'
+  dockerfile: Dockerfile.outro
+
+my-second-flavour:
+  triggers:
+    release:
+
+my-third-flavour:
+  triggers:
+    release:
+
+my-fourth-flavour:
+  triggers:
+    pull_request:
+      branches: 
+        - dev
+
