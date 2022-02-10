@@ -112,6 +112,9 @@ test('Build performs values interpolation', () => {
     if(value === "env.PAT"){
       return "my-important-secret"
     }
+    else if (value === "env.PAT2"){
+      return "my-pat-2"
+    }
     else{
 
       throw `UNKONW VAR ${value}`
@@ -133,7 +136,8 @@ test('Build performs values interpolation', () => {
 
     APP: "foo",
     App2: "lol",
-    PAT: "my-important-secret"
+    PAT: "my-important-secret",
+    PAT2: "my-pat-2"
 
   })
 })

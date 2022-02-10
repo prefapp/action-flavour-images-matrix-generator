@@ -8,6 +8,7 @@ my-flavour:
     APP: foo
     App2: lol
     PAT: ${{env.PAT}}
+    PAT2: ${{ env.PAT2 }}
   dockerfile: Dockerfile.outro
 
 my-second-flavour:
