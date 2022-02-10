@@ -137,7 +137,9 @@ test('Build performs values interpolation', () => {
     APP: "foo",
     App2: "lol",
     PAT: "my-important-secret",
-    PAT2: "my-pat-2"
+    PAT2: "my-pat-2",
+    PAT3: "my-pat-2",
+    PAT4: "my-pat-2"
 
   })
 })

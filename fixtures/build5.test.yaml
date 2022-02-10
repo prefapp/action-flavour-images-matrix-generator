@@ -9,6 +9,8 @@ my-flavour:
     App2: lol
     PAT: ${{env.PAT}}
     PAT2: ${{ env.PAT2 }}
+    PAT3: ${{env.PAT2 }}
+    PAT4: ${{ env.PAT2}}
   dockerfile: Dockerfile.outro
 
 my-second-flavour:
