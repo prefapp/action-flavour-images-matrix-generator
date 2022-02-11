@@ -12109,7 +12109,7 @@ module.exports = class {
 
 let DEFAULT_DOCKERFILE = "Dockerfile"
 
-const IS_INTERPOLABLE = new RegExp(/^\$\{\{([^}]+)\}\}$/)
+const IS_INTERPOLABLE = new RegExp(/^\$\{\{\s*([^}\s]+)\s*\}\}$/)
 
 module.exports = class {
 
