@@ -10,6 +10,8 @@
  *   - value(string): the correspondant value
  */
 
+const core = require('@actions/core');
+
 module.exports = function(key){
 
   let resolved = false
@@ -34,6 +36,8 @@ module.exports = function(key){
 
 
   }
+
+  core.setSecret(resolved);
 
   return resolved
 

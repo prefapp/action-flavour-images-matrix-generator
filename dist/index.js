@@ -12274,7 +12274,7 @@ module.exports = function(unvalidatedJson){
 /***/ }),
 
 /***/ 3897:
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /*
  * A function that receives a string with a dot key foo.v1.v2
@@ -12287,6 +12287,8 @@ module.exports = function(unvalidatedJson){
  * Returns:
  *   - value(string): the correspondant value
  */
+
+const core = __nccwpck_require__(2186);
 
 module.exports = function(key){
 
@@ -12312,6 +12314,8 @@ module.exports = function(key){
 
 
   }
+
+  core.setSecret(resolved);
 
   return resolved
 
