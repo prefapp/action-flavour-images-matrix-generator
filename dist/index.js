@@ -12766,11 +12766,11 @@ async function run(){
 
   core.info(path.join(workspace, "matrix.json"))
 
-  //core.setOutput("matrix-path", path.join(github.workspace, "matrix.json"))
+  core.setOutput("matrix-path", path.join(workspace, "matrix.json"))
 
-  //core.info(path.join(github.workspace, "matrix.json"))
+  core.info(path.join(workspace, "matrix.json"))
 
-  //fs.writeFileSync(path.join(github.workspace, "matrix.json"), matrix)
+  fs.writeFileSync(path.join(workspace, "matrix.json"), matrix)
 
 }
 
