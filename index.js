@@ -4,6 +4,8 @@ const github = require('@actions/github');
 
 const fs = require("fs")
 
+const path = require("path")
+
 const Build = require("./utils/Build.js")
 
 const ImagesCalculator = require("./utils/ImagesCalculator.js")
@@ -123,6 +125,12 @@ async function run(){
   core.info(matrix)
 
   core.setOutput("matrix", matrix)
+
+  core.setOutput("matrix-path", path.join(github.workspace, "matrix.json"))
+
+  core.info("matrix-path", path.join(github.workspace, "matrix.json"))
+
+  fs.writeFileSync(path.join(github.workspace, "matrix.json"), matrix)
 
 }
 

@@ -12640,6 +12640,8 @@ const github = __nccwpck_require__(5438);
 
 const fs = __nccwpck_require__(5747)
 
+const path = __nccwpck_require__(5622)
+
 const Build = __nccwpck_require__(6917)
 
 const ImagesCalculator = __nccwpck_require__(6638)
@@ -12759,6 +12761,12 @@ async function run(){
   core.info(matrix)
 
   core.setOutput("matrix", matrix)
+
+  core.setOutput("matrix-path", path.join(github.workspace, "matrix.json"))
+
+  core.info("matrix-path", path.join(github.workspace, "matrix.json"))
+
+  fs.writeFileSync(path.join(github.workspace, "matrix.json"), matrix)
 
 }
 
