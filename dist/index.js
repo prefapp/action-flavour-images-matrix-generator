@@ -12762,7 +12762,9 @@ async function run(){
 
   core.setOutput("matrix", matrix)
 
-  core.info(path.join(github.workspace, "matrix.json"))
+  const workspace = process.env['GITHUB_WORKSPACE']
+
+  core.info(path.join(workspace, "matrix.json"))
 
   //core.setOutput("matrix-path", path.join(github.workspace, "matrix.json"))
 
