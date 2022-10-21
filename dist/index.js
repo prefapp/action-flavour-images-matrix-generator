@@ -12362,18 +12362,6 @@ module.exports = async function(action_type, ctx){
   function __release(octokit, ctx){
 
     return ctx.triggered_event.tag_name
-
-    //return octokit.rest.repos.getLatestRelease({
-    //
-    //  owner: ctx.owner,
-
-    //  repo: ctx.repo
-
-    //}).then((r) => {
- 
-    //  return r.data.tag_name
-
-    //})
     
   }
 
@@ -12381,23 +12369,6 @@ module.exports = async function(action_type, ctx){
 
     return ctx.triggered_event.tag_name
 
-    //return octokit.rest.repos.listReleases({
-    //
-    //  owner: ctx.owner,
-
-    //  repo: ctx.repo
-
-    //}).then((rr) => {
- 
-    //  return rr.data.filter(r => r.prerelease)[0]
-
-    //}).then((r) => {
-    //
-    //  if( r ) return r.tag_name
-
-    //  return null
-    //})
-    
   }
 
   function __last_branch_commit(branch, octokit, ctx){
