@@ -16,7 +16,6 @@ module.exports = async function(action_type, ctx){
           return __last_branch_commit(action_type, octokit, ctx)
         }
         else{
-  
           return action_type
         }
     }
@@ -25,39 +24,14 @@ module.exports = async function(action_type, ctx){
 
   function __release(octokit, ctx){
 
-    return octokit.rest.repos.getLatestRelease({
-    
-      owner: ctx.owner,
-
-      repo: ctx.repo
-
-    }).then((r) => {
- 
-      return r.data.tag_name
-
-    })
+    return ctx.triggered_event.tag_name
     
   }
 
   function __prerelease(octokit, ctx){
 
-    return octokit.rest.repos.listReleases({
-    
-      owner: ctx.owner,
+    return ctx.triggered_event.tag_name
 
-      repo: ctx.repo
-
-    }).then((rr) => {
- 
-      return rr.data.filter(r => r.prerelease)[0]
-
-    }).then((r) => {
-    
-      if( r ) return r.tag_name
-
-      return null
-    })
-    
   }
 
   function __last_branch_commit(branch, octokit, ctx){
