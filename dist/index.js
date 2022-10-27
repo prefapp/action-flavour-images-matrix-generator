@@ -12361,13 +12361,13 @@ module.exports = async function(action_type, ctx){
 
   function __release(octokit, ctx){
 
-    return ctx.triggered_event.tag_name
+    return Promise.resolve(ctx.event_payload.release.tag_name)
     
   }
 
   function __prerelease(octokit, ctx){
 
-    return ctx.triggered_event.tag_name
+    return Promise.resolve(ctx.event_payload.release.tag_name)
 
   }
 
@@ -12632,6 +12632,8 @@ async function run(){
     repo: github.context.payload.repository.name,
 
     triggered_event: github.context.eventName,
+
+    event_payload: github.context.payload,
 
     actor: github.context.actor,
 
