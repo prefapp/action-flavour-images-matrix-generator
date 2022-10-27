@@ -27,6 +27,8 @@ async function run(){
 
     triggered_event: github.context.eventName,
 
+    event_payload: github.context.payload,
+
     actor: github.context.actor,
 
     master_branch: core.getInput("default_branch"),
