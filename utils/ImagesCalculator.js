@@ -12,6 +12,7 @@ module.exports = async function(action_type, ctx){
       case "release":
         return __release(octokit, ctx)
       case "workflow_dispatch":
+      
         return ctx.tags
       default:
         if(action_type.match(/^branch_/)){

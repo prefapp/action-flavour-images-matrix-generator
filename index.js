@@ -119,9 +119,9 @@ async function run(){
 
     const ctx_flavours = ctx.flavours.split(",")
 
-    flavours = build.flavours().filter((f) => ctx_flavours.includes(f.name))
+    flavours = build.flavours().filter((f) => ctx_flavours.includes(f))
 
-    tag = await ImagesCalculator("workflow_dispatch", ctx)
+    tag = await ImagesCalculator("workflow_dispatch", { ctx, flavour_to_build: flavours })
 
   }
   else{
