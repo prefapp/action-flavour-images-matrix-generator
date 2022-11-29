@@ -38,20 +38,20 @@ async function run(){
     build_file: core.getInput("build_file"),
 
     current_branch: github.context.ref.replace("refs/heads/", ""),
-  
+
   }
 
   const build = load_build(ctx)
 
   //
-  // we check the flavours to build according to the  
+  // we check the flavours to build according to the
   // event that triggered the workflow
   //
   let flavours = []
   let tag = false
 
   if( ctx.triggered_event == "push" ){
- 
+
     core.info(`With event push on branch ${ctx.current_branch}`)
 
     flavours = build.withTrigger({
@@ -69,11 +69,11 @@ async function run(){
     if( github.context.payload.release.prerelease ){
 
       core.info(`With event prerelease`)
-    
+
       flavours = build.withTrigger({
-      
+
         type: "prerelease"
-      
+
       })
 
       tag = await ImagesCalculator("prerelease", ctx)
@@ -83,9 +83,9 @@ async function run(){
       core.info(`With event release`)
 
       flavours = build.withTrigger({
-      
+
         type: "release"
-      
+
       })
 
       tag = await ImagesCalculator("release", ctx)
@@ -98,14 +98,27 @@ async function run(){
     core.info(`With event pull_request on branch ${branch}`)
 
     flavours = build.withTrigger({
-    
+
       type: "pull_request",
 
       branch
-    
+
     })
 
     tag = await ImagesCalculator(`branch_${branch}`, ctx)
+  }
+  else if( ctx.triggered_event == "workflow_dispatch"){
+
+    core.info(`With event workflow_dispatch`)
+
+    flavours = build.withTrigger({
+
+      type: "workflow_dispatch"
+
+    })
+
+    tag = await ImagesCalculator("workflow_dispatch", ctx)
+
   }
   else{
 
@@ -113,13 +126,13 @@ async function run(){
   }
 
   const matrix = new MatrixBuilder({
-    
-    flavours, 
-    
-    tag, 
-    
+
+    flavours,
+
+    tag,
+
     repository: ctx.repository
-  
+
   }).build()
 
   core.info(matrix)
