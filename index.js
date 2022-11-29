@@ -37,6 +37,12 @@ async function run(){
 
     build_file: core.getInput("build_file"),
 
+    flavours: core.getInput("flavours"),
+
+    environment: core.getInput("environment"),
+
+    tags: core.getInput("tags"),
+
     current_branch: github.context.ref.replace("refs/heads/", ""),
 
   }
@@ -111,11 +117,9 @@ async function run(){
 
     core.info(`With event workflow_dispatch`)
 
-    flavours = build.withTrigger({
+    const ctx_flavours = ctx.flavours.split(",")
 
-      type: "workflow_dispatch"
-
-    })
+    flavours = build.flavours().filter((f) => ctx_flavours.includes(f.name))
 
     tag = await ImagesCalculator("workflow_dispatch", ctx)
 

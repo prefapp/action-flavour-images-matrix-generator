@@ -1,6 +1,6 @@
 name: 'flavour-images-matrix-generator'
 description: >
-  It generates a matrix (in a json format) to be used by the workflow's jobs in order to build Docker images with particular flavours. It is conceived to be used in complex workflows with the [matrix strategy](https://docs.github.com/es/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix) and the "fromJson" method. 
+  It generates a matrix (in a json format) to be used by the workflow's jobs in order to build Docker images with particular flavours. It is conceived to be used in complex workflows with the [matrix strategy](https://docs.github.com/es/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix) and the "fromJson" method.
 inputs:
   token:
     description: >
@@ -20,10 +20,19 @@ inputs:
   build_file:
     description: "Path of the build-file"
     default: ".github/build-images.yml"
+  flavours:
+    description: "Comma-separated list of flavours to build"
+    default: false
+  tags:
+    description: "Image tags to build"
+    default: false
+  environment:
+    description: "Environment to build"
+    default: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
 
 outputs:
   matrix:
-    description: a json string with the build args. 
+    description: a json string with the build args.

@@ -12,7 +12,7 @@ module.exports = async function(action_type, ctx){
       case "release":
         return __release(octokit, ctx)
       case "workflow_dispatch":
-        return ctx['inputs']['tag']
+        return ctx.tags
       default:
         if(action_type.match(/^branch_/)){
           return __last_branch_commit(action_type, octokit, ctx)
