@@ -1,8 +1,4 @@
-const github = require("@actions/github")
-
-module.exports = async function(action_type, ctx){
-
-    const octokit = github.getOctokit(ctx.github_token)
+module.exports = async function(action_type, ctx, octokit){
 
     console.log("octokit", octokit)
 
