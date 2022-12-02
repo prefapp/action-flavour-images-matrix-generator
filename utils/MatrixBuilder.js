@@ -57,7 +57,7 @@ module.exports = class {
       return assets
     }
 
-    const release_info = this.__getReleaseInfo()
+    const release_info = this.__getReleaseInfo(triggered_event)
 
     return {
 
