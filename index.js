@@ -141,7 +141,7 @@ async function run(){
 
   })
 
-  const matrix_output = await matri.build()
+  const matrix_output = await matrix.build()
 
   core.info(matrix_output)
 
