@@ -12518,8 +12518,6 @@ module.exports = class {
   // depending on the triggered event
   __getReleaseInfo(triggered_event){
 
-    console.dir(this.ctx.event_payload)
-
     if(triggered_event == "release"){
       
       return this.ctx.event_payload.release
