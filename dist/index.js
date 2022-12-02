@@ -12564,7 +12564,7 @@ module.exports = class {
 
         name: `last_build_${this.ctx.current_branch}_${flavour}`,
 
-        commit: commit.data.sha.substring(0, 7)
+        commit: commit.data.sha
 
       },
 
@@ -12572,7 +12572,7 @@ module.exports = class {
 
         name: this.__buildTag(flavour),
 
-        commit: commit.data.sha.substring(0, 7)
+        commit: commit.data.sha
 
       }
 
