@@ -16,7 +16,16 @@ test('A matrix is properly built', () => {
 
     tag: "3.7.1",
 
-    registry: "prefapp.io/test"
+    ctx: {
+
+      registry: "prefapp.io/test",
+
+      event_payload: {
+
+
+      }
+
+    }
   
   }).build())
 

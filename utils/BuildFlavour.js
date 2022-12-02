@@ -2,6 +2,13 @@ let DEFAULT_DOCKERFILE = "Dockerfile"
 
 const IS_INTERPOLABLE = new RegExp(/^\$\{\{\s*([^}\s]+)\s*\}\}$/)
 
+/*
+ * It receives a flavour and prepares the flavour to be build. 
+ *
+ * It receives a contextResolutor to interpolate env and secret values: ${{env.foo}} => to process.env.foo     
+ *
+ */
+
 module.exports = class {
 
   static SET_DEFAULT_DOCKERFILE(default_dockerfile){
