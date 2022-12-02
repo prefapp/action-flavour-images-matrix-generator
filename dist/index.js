@@ -12847,7 +12847,7 @@ async function run(){
 
     tag,
 
-    repository: ctx.repository
+    ctx
 
   }).build()
 
