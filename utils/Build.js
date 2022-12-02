@@ -3,6 +3,13 @@ const jsYaml = require("js-yaml")
 const BuildFlavour = require("./BuildFlavour.js")
 const validateYamlSchema = require("./BuildValidate.js")
 
+/*
+ * This class is responsible of deciding WHICH flavours are to be built. 
+ * It analyzes the triggers and, according to the data (build-images.yaml).
+ * returns a list of flavours. 
+ *
+ */
+
 module.exports = class {
 
   constructor(data, contextResolutor = function(){ throw "CONTEXT_RESOLUTOR_UNDEFINED"}){
@@ -17,13 +24,22 @@ module.exports = class {
 
   }
 
-  withTrigger(trigger){
+  /*
+   * this method filters the flavours with a particular trigger
+   *
+   */
+  getFlavourswithTrigger(trigger){
 
    return  Object.values(this.__flavours)
       
       .filter( f => f.hasTrigger(trigger))
   }
 
+  /*
+   *
+   * It returns all the flavours
+   *
+   */
   get flavours(){
 
     return this.__flavours

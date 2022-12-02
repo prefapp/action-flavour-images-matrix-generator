@@ -1,39 +1,46 @@
-// const core = require("@actions/core")
-const github = require("@actions/github")
+/*
+ * It calculates the tag of the flavour according to the action:
+ *   * release
+ *   * prerelease
+ *   * workflow_dispatch
+ *   * branch_<branch_name>
+ *   * particular tag
+ *
+ */
 
-module.exports = async function(action_type, ctx){
-
-    const octokit = github.getOctokit(ctx.github_token)
+module.exports = async function(action_type, ctx, octokit){
 
     switch(action_type){
 
       case "prerelease":
         return __prerelease(octokit, ctx)
+
       case "release":
         return __release(octokit, ctx)
+
       case "workflow_dispatch":
-      
         return ctx.tags
+
       default:
         if(action_type.match(/^branch_/)){
           return __last_branch_commit(action_type, octokit, ctx)
         }
         else{
+          // directly is a particular version (i.e v1.0.1)
           return action_type
         }
     }
 }
 
-
   function __release(octokit, ctx){
 
-    return Promise.resolve(ctx.event_payload.release.tag_name)
+    return ctx.event_payload.release.tag_name
 
   }
 
   function __prerelease(octokit, ctx){
 
-    return Promise.resolve(ctx.event_payload.release.tag_name)
+    return ctx.event_payload.release.tag_name
 
   }
 

@@ -61,7 +61,7 @@ test('Build get flavours by trigger', () => {
 
   const build = new Build(build_data).init()
 
-  let flavours = build.withTrigger({
+  let flavours = build.getFlavourswithTrigger({
   
     type: "push",
 
@@ -73,7 +73,7 @@ test('Build get flavours by trigger', () => {
   
   expect(flavours[0].flavour).toBe("my-flavour")
 
-  flavours = build.withTrigger({
+  flavours = build.getFlavourswithTrigger({
   
     type: "release",
   
@@ -90,7 +90,7 @@ test('Build get flavours by pre-release trigger', () => {
 
   const build = new Build(build_data).init()
 
-  let flavours = build.withTrigger({
+  let flavours = build.getFlavourswithTrigger({
   
     type: "prerelease",
   
@@ -122,7 +122,7 @@ test('Build performs values interpolation', () => {
 
   }).init()
 
-  let flavours = build.withTrigger({
+  let flavours = build.getFlavourswithTrigger({
   
     type: "push",
 

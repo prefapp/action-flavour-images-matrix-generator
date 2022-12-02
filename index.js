@@ -12,6 +12,8 @@ const MatrixBuilder = require("./utils/MatrixBuilder.js")
 
 const ContextResolutor = require("./utils/ContextResolutor.js")
 
+const github = require("@actions/github")
+
 async function run(){
 
   //
@@ -47,6 +49,8 @@ async function run(){
 
   }
 
+  const octokit = github.getOctokit(ctx.github_token)
+
   const build = load_build(ctx)
 
   //
@@ -68,7 +72,7 @@ async function run(){
 
     })
 
-    tag = await ImagesCalculator(`branch_${ctx.current_branch}`, ctx)
+    tag = await ImagesCalculator(`branch_${ctx.current_branch}`, ctx, octokit)
   }
   else if(ctx.triggered_event == "release"){
 
@@ -82,7 +86,7 @@ async function run(){
 
       })
 
-      tag = await ImagesCalculator("prerelease", ctx)
+      tag = await ImagesCalculator("prerelease", ctx, octokit)
     }
     else{
 
@@ -94,7 +98,7 @@ async function run(){
 
       })
 
-      tag = await ImagesCalculator("release", ctx)
+      tag = await ImagesCalculator("release", ctx, octokit)
     }
   }
   else if( ctx.triggered_event == "pull_request"){
@@ -111,7 +115,7 @@ async function run(){
 
     })
 
-    tag = await ImagesCalculator(`branch_${branch}`, ctx)
+    tag = await ImagesCalculator(`branch_${branch}`, ctx, octokit)
   }
   else if( ctx.triggered_event == "workflow_dispatch"){
 
@@ -121,7 +125,7 @@ async function run(){
 
     flavours = build.flavours().filter((f) => ctx_flavours.includes(f))
 
-    tag = await ImagesCalculator("workflow_dispatch", { ctx, flavour_to_build: flavours })
+    tag = await ImagesCalculator("workflow_dispatch", { ctx, flavour_to_build: flavours }, octokit)
 
   }
   else{
