@@ -32,12 +32,24 @@ async function __last_branch_commit(octokit, ctx, flavour){
 
     })
 
-    return  {
+    return  [
+
+      {
 
         name: `last_build_${ctx.current_branch}_${flavour}`,
 
-        commit: commit.data.sha
+        commit: commit.data.sha.substring(0, 7)
 
-    }
+      },
+
+      {
+
+        name: `image_${ctx.current_branch}_${flavour}`,
+
+        commit: commit.data.sha.substring(0, 7)
+
+      }
+
+    ]
 
 }

@@ -14,5 +14,40 @@ test('Get last commit from branch',async () => {
 
     }
 
-    const result = await GitTagsCalculator("branch_main", ctx)
+    const octokit = {
+
+        rest: {
+
+            repos: {
+
+                getCommit: async (params) => {
+
+                    return {
+
+                        data: {
+
+                            sha: "1234567890abcdef"
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+
+    const result = await GitTagsCalculator("push", ctx, octokit)
+
+    expect(result[0].name).toBe("last_build_main_default")
+    expect(result[0].commit).toBe("12345678")
+
+    expect(result[0].name).toBe("image_main_default")
+    expect(result[0].commit).toBe("12345678")
+
 })
