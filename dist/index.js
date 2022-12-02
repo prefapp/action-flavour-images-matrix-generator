@@ -12570,7 +12570,7 @@ module.exports = class {
 
       {
 
-        name: __buildTag(flavour),
+        name: this.__buildTag(flavour),
 
         commit: commit.data.sha.substring(0, 7)
 
