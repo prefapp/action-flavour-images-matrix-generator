@@ -12434,32 +12434,39 @@ module.exports = async function(action_type, ctx, octokit){
 
 module.exports = class {
 
-  constructor({flavours, tag, ctx}){
+  constructor({flavours, tag, ctx, octokit}){
 
     this.flavours = flavours
     this.tag = tag
     this.repository = ctx.repository
     this.ctx = ctx
+    this.octokit = octokit
 
   }
 
   async build(){
 
-    const build = this.flavours.map((fl) => {
+    const build = await Promise.all(
 
-      return {
+      this.flavours.map( async (fl) => {
 
-        tags: this.__buildTag(fl.flavour),
+        return {
 
-        build_args: this.__formatBuildArgs(fl.build_args),
+          tags: this.__buildTag(fl.flavour),
 
-        dockerfile: fl.dockerfile,
+          build_args: this.__formatBuildArgs(fl.build_args),
 
-        git_tags: [],
+          dockerfile: fl.dockerfile,
 
-      }
+          git_tags:   await this.__calculateFlavourGitTags(fl.flavour)
 
-    })
+
+        }
+
+      })
+
+    )
+
 
     return JSON.stringify({
 
@@ -12519,10 +12526,10 @@ module.exports = class {
   __getReleaseInfo(triggered_event){
 
     if(triggered_event == "release"){
-      
+
       return this.ctx.event_payload.release
     }
-    else{ 
+    else{
 
       // it is workflow dispatch case
       // we need to get the release from the name passed along
@@ -12534,8 +12541,42 @@ module.exports = class {
   }
 
 
-  __calculateFlavourGitTags(){
-    
+  async __calculateFlavourGitTags(flavour){
+
+    // We do not produce git for releases or prereleases
+    if(this.ctx.triggered_event == "release"){
+      return []
+    }
+
+    const commit = await octokit.rest.repos.getCommit({
+
+        owner: this.ctx.owner,
+
+        repo: this.ctx.repo,
+
+        ref: this.ctx.current_branch
+
+    })
+
+    return  [
+
+      {
+
+        name: `last_build_${this.ctx.current_branch}_${flavour}`,
+
+        commit: commit.data.sha.substring(0, 7)
+
+      },
+
+      {
+
+        name: __buildTag(flavour),
+
+        commit: commit.data.sha.substring(0, 7)
+
+      }
+
+    ]
 
   }
     __buildTag(flavour){
