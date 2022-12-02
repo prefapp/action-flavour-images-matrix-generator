@@ -12548,7 +12548,7 @@ module.exports = class {
       return []
     }
 
-    const commit = await octokit.rest.repos.getCommit({
+    const commit = await this.octokit.rest.repos.getCommit({
 
         owner: this.ctx.owner,
 
@@ -12888,7 +12888,9 @@ async function run(){
 
     tag,
 
-    ctx
+    ctx,
+
+    octokit
 
   })
 
