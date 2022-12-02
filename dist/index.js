@@ -12849,11 +12849,13 @@ async function run(){
 
     ctx
 
-  }).build()
+  })
 
-  core.info(matrix)
+  const matrix_output = await matri.build()
 
-  core.setOutput("matrix", matrix)
+  core.info(matrix_output)
+
+  core.setOutput("matrix", matrix_output)
 
 }
 
