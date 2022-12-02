@@ -20,6 +20,10 @@ module.exports = async function(action_type, ctx, octokit){
     }
 }
 
+function __prerelease() {}
+
+function __release() {}
+
 async function __last_branch_commit(octokit, ctx, flavour){
 
     const commit = await octokit.rest.repos.getCommit({

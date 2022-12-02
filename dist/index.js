@@ -12024,6 +12024,13 @@ const jsYaml = __nccwpck_require__(1917)
 const BuildFlavour = __nccwpck_require__(472)
 const validateYamlSchema = __nccwpck_require__(3978)
 
+/*
+ * This class is responsible of deciding WHICH flavours are to be built. 
+ * It analyzes the triggers and, according to the data (build-images.yaml).
+ * returns a list of flavours. 
+ *
+ */
+
 module.exports = class {
 
   constructor(data, contextResolutor = function(){ throw "CONTEXT_RESOLUTOR_UNDEFINED"}){
@@ -12038,13 +12045,22 @@ module.exports = class {
 
   }
 
-  withTrigger(trigger){
+  /*
+   * this method filters the flavours with a particular trigger
+   *
+   */
+  getFlavourswithTrigger(trigger){
 
    return  Object.values(this.__flavours)
       
       .filter( f => f.hasTrigger(trigger))
   }
 
+  /*
+   *
+   * It returns all the flavours
+   *
+   */
   get flavours(){
 
     return this.__flavours
@@ -12110,6 +12126,13 @@ module.exports = class {
 let DEFAULT_DOCKERFILE = "Dockerfile"
 
 const IS_INTERPOLABLE = new RegExp(/^\$\{\{\s*([^}\s]+)\s*\}\}$/)
+
+/*
+ * It receives a flavour and prepares the flavour to be build. 
+ *
+ * It receives a contextResolutor to interpolate env and secret values: ${{env.foo}} => to process.env.foo     
+ *
+ */
 
 module.exports = class {
 
@@ -12333,60 +12356,70 @@ module.exports = function(key){
 /***/ }),
 
 /***/ 6638:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ ((module) => {
 
-// const core = require("@actions/core")
-const github = __nccwpck_require__(5438)
+/*
+ * It calculates the tag of the flavour according to the action:
+ *   * release
+ *   * prerelease
+ *   * workflow_dispatch
+ *   * branch_<branch_name>
+ *   * particular tag
+ *
+ */
 
-module.exports = async function(action_type, ctx){
+module.exports = async function(action_type, ctx, octokit){
 
-    const octokit = github.getOctokit(ctx.github_token)
-  
     switch(action_type){
-  
+
       case "prerelease":
         return __prerelease(octokit, ctx)
+
       case "release":
         return __release(octokit, ctx)
+
+      case "workflow_dispatch":
+        return ctx.tags
+
       default:
         if(action_type.match(/^branch_/)){
           return __last_branch_commit(action_type, octokit, ctx)
         }
         else{
+          // directly is a particular version (i.e v1.0.1)
           return action_type
         }
     }
 }
 
-
   function __release(octokit, ctx){
 
-    return Promise.resolve(ctx.event_payload.release.tag_name)
-    
+    return ctx.event_payload.release.tag_name
+
   }
 
   function __prerelease(octokit, ctx){
 
-    return Promise.resolve(ctx.event_payload.release.tag_name)
+    return ctx.event_payload.release.tag_name
 
   }
 
   function __last_branch_commit(branch, octokit, ctx){
 
     return octokit.rest.repos.getBranch({
-    
+
       owner: ctx.owner,
 
       repo: ctx.repo,
 
       branch: branch.replace(/^branch_/, "")
-    
+
     }).then((b) => {
-    
+
       //
       // we only use the first 8 chars of the commit's SHA for tagging
       //
-      return b.data.commit.sha.substring(0, 7) 
+      return b.data.commit.sha.substring(0, 7)
 
     })
 
@@ -12401,39 +12434,110 @@ module.exports = async function(action_type, ctx){
 
 module.exports = class {
 
-  constructor({flavours, tag, repository}){
+  constructor({flavours, tag, ctx}){
 
     this.flavours = flavours
     this.tag = tag
-    this.repository = repository
+    this.repository = ctx.repository
+    this.ctx = ctx
 
   }
 
-  build(){
+  async build(){
 
     const build = this.flavours.map((fl) => {
-    
+
       return {
-      
+
         tags: this.__buildTag(fl.flavour),
 
         build_args: this.__formatBuildArgs(fl.build_args),
 
-        dockerfile: fl.dockerfile
+        dockerfile: fl.dockerfile,
+
+        git_tags: [],
 
       }
-    
+
     })
 
     return JSON.stringify({
 
-      include: build
+      include: build,
+
+      // this section will include all the artifacts produced for a particular
+      // release or pre-release
+      assets: await this.__calculateAssets(build)
 
     })
 
 
   }
 
+
+  // We iterate over the built assets and filter those of a particular
+  // release or pre-release
+  async __calculateAssets(){
+
+    const assets = {}
+
+    // The triggered event has to be a release, prerelease or workflow_dispatch
+    // if not, there are no assets
+    const triggered_event = this.ctx.triggered_event
+
+    if(triggered_event != "release" && triggered_event != "workflow_dispatch"){
+
+      return assets
+    }
+
+    const release_info = this.__getReleaseInfo()
+
+    return {
+
+      release_id: release_info.id,
+
+      images: this.flavours.map((fl) => {
+
+        return {
+
+          flavour: fl.flavour,
+
+          image: this.__buildTag(fl.flavour),
+
+        }
+
+      })
+
+    }
+
+
+
+  }
+
+  // gets information of a release
+  // depending on the triggered event
+  __getReleaseInfo(triggered_event){
+
+    if(triggered_event == "release"){
+      
+      return this.ctx.event_payload.release
+    }
+    else{ 
+
+      // it is workflow dispatch case
+      // we need to get the release from the name passed along
+      throw "NOT IMPLEMENTED"
+
+
+    }
+
+  }
+
+
+  __calculateFlavourGitTags(){
+    
+
+  }
     __buildTag(flavour){
 
       return `${this.repository}:${this.tag}_${flavour}`
@@ -12442,7 +12546,7 @@ module.exports = class {
     __formatBuildArgs(build_args){
 
       return Object.keys(build_args).map((ba) => {
-      
+
         return `${ba}=${build_args[ba]}`
 
       }).join("\n")
@@ -12643,24 +12747,32 @@ async function run(){
 
     build_file: core.getInput("build_file"),
 
+    flavours: core.getInput("flavours"),
+
+    environment: core.getInput("environment"),
+
+    tags: core.getInput("tags"),
+
     current_branch: github.context.ref.replace("refs/heads/", ""),
-  
+
   }
+
+  const octokit = github.getOctokit(ctx.github_token)
 
   const build = load_build(ctx)
 
   //
-  // we check the flavours to build according to the  
+  // we check the flavours to build according to the
   // event that triggered the workflow
   //
   let flavours = []
   let tag = false
 
   if( ctx.triggered_event == "push" ){
- 
+
     core.info(`With event push on branch ${ctx.current_branch}`)
 
-    flavours = build.withTrigger({
+    flavours = build.getFlavourswithTrigger({
 
       type: "push",
 
@@ -12668,33 +12780,33 @@ async function run(){
 
     })
 
-    tag = await ImagesCalculator(`branch_${ctx.current_branch}`, ctx)
+    tag = await ImagesCalculator(`branch_${ctx.current_branch}`, ctx, octokit)
   }
   else if(ctx.triggered_event == "release"){
 
     if( github.context.payload.release.prerelease ){
 
       core.info(`With event prerelease`)
-    
-      flavours = build.withTrigger({
-      
+
+      flavours = build.getFlavourswithTrigger({
+
         type: "prerelease"
-      
+
       })
 
-      tag = await ImagesCalculator("prerelease", ctx)
+      tag = await ImagesCalculator("prerelease", ctx, octokit)
     }
     else{
 
       core.info(`With event release`)
 
-      flavours = build.withTrigger({
-      
+      flavours = build.getFlavourswithTrigger({
+
         type: "release"
-      
+
       })
 
-      tag = await ImagesCalculator("release", ctx)
+      tag = await ImagesCalculator("release", ctx, octokit)
     }
   }
   else if( ctx.triggered_event == "pull_request"){
@@ -12703,15 +12815,26 @@ async function run(){
 
     core.info(`With event pull_request on branch ${branch}`)
 
-    flavours = build.withTrigger({
-    
+    flavours = build.getFlavourswithTrigger({
+
       type: "pull_request",
 
       branch
-    
+
     })
 
-    tag = await ImagesCalculator(`branch_${branch}`, ctx)
+    tag = await ImagesCalculator(`branch_${branch}`, ctx, octokit)
+  }
+  else if( ctx.triggered_event == "workflow_dispatch"){
+
+    core.info(`With event workflow_dispatch`)
+
+    const ctx_flavours = ctx.flavours.split(",")
+
+    flavours = build.flavours().filter((f) => ctx_flavours.includes(f))
+
+    tag = await ImagesCalculator("workflow_dispatch", { ctx, flavour_to_build: flavours }, octokit)
+
   }
   else{
 
@@ -12719,13 +12842,13 @@ async function run(){
   }
 
   const matrix = new MatrixBuilder({
-    
-    flavours, 
-    
-    tag, 
-    
+
+    flavours,
+
+    tag,
+
     repository: ctx.repository
-  
+
   }).build()
 
   core.info(matrix)

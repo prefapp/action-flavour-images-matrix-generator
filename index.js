@@ -12,8 +12,6 @@ const MatrixBuilder = require("./utils/MatrixBuilder.js")
 
 const ContextResolutor = require("./utils/ContextResolutor.js")
 
-const github = require("@actions/github")
-
 async function run(){
 
   //
@@ -64,7 +62,7 @@ async function run(){
 
     core.info(`With event push on branch ${ctx.current_branch}`)
 
-    flavours = build.withTrigger({
+    flavours = build.getFlavourswithTrigger({
 
       type: "push",
 
@@ -80,7 +78,7 @@ async function run(){
 
       core.info(`With event prerelease`)
 
-      flavours = build.withTrigger({
+      flavours = build.getFlavourswithTrigger({
 
         type: "prerelease"
 
@@ -92,7 +90,7 @@ async function run(){
 
       core.info(`With event release`)
 
-      flavours = build.withTrigger({
+      flavours = build.getFlavourswithTrigger({
 
         type: "release"
 
@@ -107,7 +105,7 @@ async function run(){
 
     core.info(`With event pull_request on branch ${branch}`)
 
-    flavours = build.withTrigger({
+    flavours = build.getFlavourswithTrigger({
 
       type: "pull_request",
 
