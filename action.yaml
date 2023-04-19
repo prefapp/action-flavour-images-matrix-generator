@@ -21,7 +21,7 @@ inputs:
     description: "Path of the build-file"
     default: ".github/build-images.yml"
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 
 outputs:
