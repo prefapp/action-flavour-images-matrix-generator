@@ -1,0 +1,13 @@
+backend:
+  triggers:
+    release:
+      release_tag: "^backend_service_v.*"
+  dockerfile: Dockerfile.backend
+
+frontend:
+  triggers:
+    release:
+      release_tag: "^frontend_service_v.*"
+  dockerfile: Dockerfile.frontend
+
+

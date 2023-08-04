@@ -145,3 +145,48 @@ test('Build performs values interpolation', () => {
   })
 })
 
+
+test('Build controls release tag if present', () => {
+
+  const build_data = fs.readFileSync("./fixtures/build_with_release_tag.yaml")
+
+  const build = new Build(build_data, function(value){
+
+    // mock of context resolutor
+    if(value === "env.PAT"){
+      return "my-important-secret"
+    }
+    else if (value === "env.PAT2"){
+      return "my-pat-2"
+    }
+    else{
+
+      throw `UNKONW VAR ${value}`
+    }
+
+  }).init()
+
+  let flavours = build.withTrigger({
+  
+    type: "release",
+
+    release_tag: "backend_service_v6.0.1"
+  
+  })
+
+  expect(flavours[0].flavour).toBe("backend")
+  expect(flavours.length).toBe(1)
+
+  flavours = build.withTrigger({
+  
+    type: "release",
+
+    release_tag: "frontend_service_v6.0.1"
+  
+  })
+
+  expect(flavours[0].flavour).toBe("frontend")
+  expect(flavours.length).toBe(1)
+
+})
+

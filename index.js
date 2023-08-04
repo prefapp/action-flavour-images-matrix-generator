@@ -72,7 +72,9 @@ async function run(){
     
       flavours = build.withTrigger({
       
-        type: "prerelease"
+        type: "prerelease",
+
+        release_tag: github.ref
       
       })
 
@@ -84,7 +86,9 @@ async function run(){
 
       flavours = build.withTrigger({
       
-        type: "release"
+        type: "release",
+
+        release_tag: github.ref
       
       })
 
