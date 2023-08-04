@@ -12130,7 +12130,7 @@ module.exports = class {
 
   }
 
-  hasTrigger({ type, branch }){
+  hasTrigger({ type, branch, release_tag}){
 
     if( type in this.triggers ){
 
@@ -12143,6 +12143,21 @@ module.exports = class {
         else{
 
           return false
+        }
+
+      }
+      else if(release_tag && (type == "release" || type == "prerelease") ){
+
+        if(this.triggers[type].release_tag){
+
+          const reg = new RegExp(this.triggers[type].release_tag)
+
+          return reg.test(release_tag)
+
+        }
+        else{
+
+          return true
         }
 
       }
@@ -12678,7 +12693,9 @@ async function run(){
     
       flavours = build.withTrigger({
       
-        type: "prerelease"
+        type: "prerelease",
+
+        release_tag: github.ref
       
       })
 
@@ -12690,7 +12707,9 @@ async function run(){
 
       flavours = build.withTrigger({
       
-        type: "release"
+        type: "release",
+
+        release_tag: github.ref
       
       })
 
