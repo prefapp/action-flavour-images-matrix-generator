@@ -2,10 +2,6 @@ let DEFAULT_DOCKERFILE = "Dockerfile"
 
 const IS_INTERPOLABLE = new RegExp(/^\$\{\{\s*([^}\s]+)\s*\}\}$/)
 
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-}
-
 module.exports = class {
 
   static SET_DEFAULT_DOCKERFILE(default_dockerfile){
